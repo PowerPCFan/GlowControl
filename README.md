@@ -1,6 +1,11 @@
-# GlowControl
+<h1 align="center">GlowControl</h1>
 
-GlowControl is a small app for controlling monitor brightness and contrast over DDC/CI.
+<p align="center">GlowControl is a small app for controlling monitor brightness and contrast over DDC/CI.</p>
+
+<center>
+<img align="center" src="img/controls.png" alt="Screenshot of GlowControl controls" height="400">
+<img align="center" src="img/osd.png" alt="Screenshot of GlowControl's OSD" height="175">
+</center>
 
 ## Dependencies
 
