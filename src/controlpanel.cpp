@@ -4,6 +4,7 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QSettings>
+#include <QSignalBlocker>
 #include <QSlider>
 #include <QSpinBox>
 #include <QStringList>
@@ -15,6 +16,7 @@ constexpr const char *SettingsOrganization = "GlowControl";
 constexpr const char *SettingsApplication = "GlowControl";
 constexpr const char *SyncAllKey = "syncAllMonitors";
 constexpr const char *ShowOsdKey = "showOsd";
+constexpr const char *UseNativeOsdKey = "useNativeOsd";
 constexpr const char *StepSizeKey = "stepSize";
 }
 
@@ -49,11 +51,15 @@ void ControlPanel::loadMonitors() {
 }
 
 bool ControlPanel::syncAllEnabled() const {
-    return syncAllMonitors;
+    return syncAllMonitors || useNativeOsd;
 }
 
 bool ControlPanel::osdEnabled() const {
     return showOsd;
+}
+
+bool ControlPanel::nativeOsdEnabled() const {
+    return useNativeOsd;
 }
 
 int ControlPanel::adjustmentStep() const {
@@ -76,6 +82,11 @@ void ControlPanel::loadSettings() {
 
     syncAllMonitors = settings.value(SyncAllKey, syncAllMonitors).toBool();
     showOsd = settings.value(ShowOsdKey, showOsd).toBool();
+    useNativeOsd = settings.value(UseNativeOsdKey, useNativeOsd).toBool();
+    if (useNativeOsd) {
+        syncAllMonitors = true;
+        settings.setValue(SyncAllKey, syncAllMonitors);
+    }
     stepSize = std::clamp(settings.value(StepSizeKey, stepSize).toInt(), 1, 25);
 }
 
@@ -156,6 +167,7 @@ void ControlPanel::addSettingsPage(QTabWidget *tabs) {
 
     syncAllCheckBox = new QCheckBox("Sync All Monitors", settingsPage);
     syncAllCheckBox->setChecked(syncAllMonitors);
+    syncAllCheckBox->setEnabled(!useNativeOsd);
     connect(syncAllCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
         syncAllMonitors = checked;
         saveSetting(SyncAllKey, syncAllMonitors);
@@ -171,6 +183,24 @@ void ControlPanel::addSettingsPage(QTabWidget *tabs) {
         saveSetting(ShowOsdKey, showOsd);
     });
     layout->addWidget(osdCheckBox);
+
+    nativeOsdCheckBox = new QCheckBox("Use Native OSD", settingsPage);
+    nativeOsdCheckBox->setChecked(useNativeOsd);
+    connect(nativeOsdCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
+        useNativeOsd = checked;
+        saveSetting(UseNativeOsdKey, useNativeOsd);
+        if (useNativeOsd) {
+            syncAllMonitors = true;
+            saveSetting(SyncAllKey, syncAllMonitors);
+            const QSignalBlocker blocker(syncAllCheckBox);
+            syncAllCheckBox->setChecked(true);
+        }
+
+        syncAllCheckBox->setEnabled(!useNativeOsd);
+        rebuildControls(false);
+        QTimer::singleShot(50, this, &ControlPanel::loadMonitors);
+    });
+    layout->addWidget(nativeOsdCheckBox);
 
     QWidget *stepRow = new QWidget(settingsPage);
     QHBoxLayout *stepLayout = new QHBoxLayout(stepRow);

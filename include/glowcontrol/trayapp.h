@@ -32,6 +32,7 @@ private:
     void adjustAllBrightness(int direction);
     void applyPendingBrightness();
     void feelLuckyBrightness();
+    void showBrightnessOsd(const QList<OsdValue> &values);
     QList<OsdValue> pendingBrightnessOsdValues() const;
     QPoint panelPosition(const QPoint &requestedPosition) const;
 };

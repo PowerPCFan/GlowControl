@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS DBus Widgets)
 find_package(KF6StatusNotifierItem REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(DDCUTIL REQUIRED IMPORTED_TARGET ddcutil)
@@ -20,6 +20,8 @@ add_executable(glowcontrol
     src/main.cpp
     include/glowcontrol/osdwindow.h
     src/osdwindow.cpp
+    include/glowcontrol/nativeosd.h
+    src/nativeosd.cpp
     include/glowcontrol/shortcut.h
     src/shortcut.cpp
     include/glowcontrol/trayapp.h
@@ -30,6 +32,7 @@ add_executable(glowcontrol
 target_include_directories(glowcontrol PRIVATE include)
 
 target_link_libraries(glowcontrol PRIVATE
+    Qt6::DBus
     Qt6::Widgets
     KF6::StatusNotifierItem
     PkgConfig::DDCUTIL

@@ -19,6 +19,7 @@ public:
 
     bool syncAllEnabled() const;
     bool osdEnabled() const;
+    bool nativeOsdEnabled() const;
     int adjustmentStep() const;
     void applyPendingChanges();
     void showControlsTab();
@@ -31,9 +32,11 @@ private:
     QVBoxLayout *mainLayout;
     QCheckBox *syncAllCheckBox = nullptr;
     QCheckBox *osdCheckBox = nullptr;
+    QCheckBox *nativeOsdCheckBox = nullptr;
     QSpinBox *adjustmentStepSpinBox = nullptr;
     bool syncAllMonitors = false;
     bool showOsd = true;
+    bool useNativeOsd = false;
     int stepSize = 5;
     QList<Monitor> monitors;
     QMap<QString, QTimer*> timers;

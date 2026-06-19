@@ -2,10 +2,10 @@
 
 <p align="center">GlowControl is a small app for controlling monitor brightness and contrast over DDC/CI.</p>
 
-<center>
-<img align="center" src="img/controls.png" alt="Screenshot of GlowControl controls" height="400">
-<img align="center" src="img/osd.png" alt="Screenshot of GlowControl's OSD" height="175">
-</center>
+<div style="display: flex; justify-content: center; align-items: center;" align="center">
+    <img align="center" src="img/controls.png" alt="Screenshot of GlowControl controls" height="400">
+    <img align="center" src="img/osd.png" alt="Screenshot of GlowControl's OSD" height="175">
+</div>
 
 ## Dependencies
 
@@ -87,11 +87,14 @@ glowcontrol --mode contrast --value 50
 ```
 
 Show the OSD (recommended):
+Note: `--osd` / `--native-osd` flags work with all commands, not just the examples below. Add them onto any `glowcontrol` command to show the custom or native OSDs.
 
 ```bash
-# (works with all CLI commands, not just the examples below)
 glowcontrol --mode brightness --direction up --osd
 glowcontrol --mode contrast --value 50 --osd
+
+glowcontrol --mode brightness --direction up --native-osd
+glowcontrol --mode brightness --value 75 --native-osd
 ```
 
 Show help menu:

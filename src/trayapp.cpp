@@ -1,5 +1,7 @@
 #include "glowcontrol/trayapp.h"
 
+#include "glowcontrol/nativeosd.h"
+
 #include <QApplication>
 #include <QCursor>
 #include <QGuiApplication>
@@ -133,7 +135,7 @@ void TrayApp::adjustAllBrightness(int direction) {
     }
 
     if (panel->osdEnabled()) {
-        osd->showValues("Brightness", pendingBrightnessOsdValues());
+        showBrightnessOsd(pendingBrightnessOsdValues());
     }
     brightnessScrollTimer->start();
 }
@@ -178,12 +180,21 @@ void TrayApp::feelLuckyBrightness() {
     }
 
     if (panel->osdEnabled()) {
-        osd->showValues("Brightness", osdValues);
+        showBrightnessOsd(osdValues);
     }
 
     if (panel->isVisible()) {
         panel->loadMonitors();
     }
+}
+
+void TrayApp::showBrightnessOsd(const QList<OsdValue> &values) {
+    if (panel->nativeOsdEnabled()) {
+        showNativeBrightnessOsd(values.isEmpty() ? 0 : values.constFirst().value);
+        return;
+    }
+
+    osd->showValues("Brightness", values);
 }
 
 QList<OsdValue> TrayApp::pendingBrightnessOsdValues() const {
