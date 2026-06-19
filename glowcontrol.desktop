@@ -1,0 +1,11 @@
+# This is a template .desktop file.
+# This is not required, but you can place this in ~/.local/share/applications after filling in placeholders.
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GlowControl
+Comment=A simple tray app to control monitors over DDC/CI
+Exec=/glowcontrol repo location/build/glowcontrol
+Icon=/glowcontrol repo location/GlowControl.svg
+Terminal=false
+Categories=Utility;
